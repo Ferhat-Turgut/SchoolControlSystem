@@ -8,8 +8,9 @@ namespace SchoolControlSystem.Models
 {
     public class ClassModel
     {
-        public int ClassId { get; set; }
-        public string ClassName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public string? Teacher { get; set; }
+        
     }
 }

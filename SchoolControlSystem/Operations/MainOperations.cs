@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SchoolControlSystem.Operations
 {
     public  class MainOperations
     {
+        MainValidations mainValidations=new MainValidations();
         public  void ShowMainOptions() 
         {
             Console.WriteLine("Sınıf işlemleri için 1'e\n" +
@@ -21,7 +23,7 @@ namespace SchoolControlSystem.Operations
         }
         public void SelectedValueValidCheck(string SelectedAction) 
         {
-            bool IsSelectedValueExistOnList = CommonValidations.IsExistOnList(SelectedAction, CommonConstant.CommonConstant.MainOperationsValidList); 
+            bool IsSelectedValueExistOnList = mainValidations.IsExistOnList(SelectedAction, CommonConstant.CommonConstant.MainOperationsValidList); 
             if (IsSelectedValueExistOnList) 
             {
                 RedirectToSelectedAction(SelectedAction);
@@ -41,7 +43,7 @@ namespace SchoolControlSystem.Operations
                     classOperations.ShowClassOptions();
                     break;
                 case "2":
-                    if (Lists.ClassList.Count<1)
+                    if (Lists.ClassList.Count==0)
                     {
                         Console.WriteLine("Sınıf eklemeden öğrenci ekleyemezsiniz.");
                         ShowMainOptions();
@@ -53,11 +55,10 @@ namespace SchoolControlSystem.Operations
                     }
                     break;
                 case "3":
-                    if (Lists.ClassList.Count < 1)
+                    if (Lists.ClassList.Count ==0)
                     {
                         Console.WriteLine("Sınıf eklemeden öğretmen ekleyemezsiniz.");
                         ShowMainOptions();
-
                     }
                     else
                     {
@@ -68,6 +69,9 @@ namespace SchoolControlSystem.Operations
                 case "4":
                         SearchOperations searchOperations = new SearchOperations();
                         searchOperations.SearchInSchool();
+                    break;
+                case "5":
+                    Environment.Exit(0);
                     break;
             }
         }

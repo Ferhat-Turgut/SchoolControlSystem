@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace SchoolControlSystem.Operations
 {
-    public class ClassOperations
+    public class ClassOperations:CommonOperations
     {
+        ClassValidations classValidations = new ClassValidations();
         public void ShowClassOptions()
         {
             Console.WriteLine("Sınıf eklemek için 1'e\n" +
@@ -23,7 +24,7 @@ namespace SchoolControlSystem.Operations
         }
         public void SelectedClassActionValidityCheck(string SelectedAction)
         {
-            bool IsSelectedValueExistOnList = CommonValidations.IsExistOnList(SelectedAction, CommonConstant.CommonConstant.ClassOperationsValidList);
+            bool IsSelectedValueExistOnList = classValidations.IsExistOnList(SelectedAction, CommonConstant.CommonConstant.ClassOperationsValidList);
             if (IsSelectedValueExistOnList)
             {
                 RedirectToSelectedClassAction(SelectedAction);
@@ -42,7 +43,7 @@ namespace SchoolControlSystem.Operations
                     AddNewClass();
                     break;
                 case "2":
-                    ShowClassesInList();
+                    ShowClassesList();
                     break;
                 case "3":
                     MainOperations mainOperations = new MainOperations();
@@ -54,49 +55,40 @@ namespace SchoolControlSystem.Operations
         public void AddNewClass() 
         {
             Console.WriteLine("Lütfen sınıf adı giriniz:");
-            string EnteredClassName = Console.ReadLine();
+            string EnteredClassName = Console.ReadLine().ToUpper();
 
-            bool IsEnteredValueExistOnList = CommonValidations.IsExistOnList(EnteredClassName,Lists.ClassList.Select(c=>c.ClassName).ToList());
-            if (IsEnteredValueExistOnList)
+            bool IsEnteredClassExistOnList = classValidations.IsExistOnList(EnteredClassName,Lists.ClassList.Select(c=>c.Name).ToList());
+            if (IsEnteredClassExistOnList)
             {
                 Console.WriteLine("Bu sınıf sistemde kayıtlıdır.");
                 ShowClassOptions();
             }
             else
             {
-                int GeneratedNewClassId = CommonValidations.GetGenerateNewId(Lists.ClassList.Select(c=>c.ClassId).ToList());
+                int GeneratedNewClassId = classValidations.GetGenerateNewId(Lists.ClassList.Select(c=>c.Id).ToList());
                 ClassModel classModel = new ClassModel();
-                classModel.ClassName = EnteredClassName;
-                classModel.ClassId = GeneratedNewClassId;
+                classModel.Id = GeneratedNewClassId;
+                classModel.Name = EnteredClassName;
                 Lists.ClassList.Add(classModel);
                 Console.WriteLine("Yeni sınıf eklendi.");
                 ShowClassOptions();
             }
         }
-        public void ShowClassesInList() 
+        public void ShowClassesList() 
         {
-            bool IsClassListEmpty=CommonValidations.IsListEmpty(Lists.ClassList.Select(c=>c.ClassId).ToList());
-            if (IsClassListEmpty)
-            {
-                Console.WriteLine("Sınıf listesi boş.Lütfen kayıt ekleyin.");
-            }
-            else
+            bool IsClassListEmpty=classValidations.IsListEmpty(Lists.ClassList.Select(c=>c.Id).ToList());
+            if (!IsClassListEmpty)
             {
                 foreach (var item in Lists.ClassList)
                 {
-                    Console.Write($"Sınıf Id:{item.ClassId}\t");
-                    Console.Write($"Sınıf Adı:{item.ClassName}\t");
-                    if (string.IsNullOrEmpty(item.Teacher))
-                    {
-                        Console.WriteLine($"Sınıf Öğretmeni:Atanmadı!");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Sınıf Öğretmeni:{item.Teacher}");
-                    }
+                    Console.Write($"Sınıf Id:{item.Id}\t");
+                    Console.Write($"Sınıf Adı:{item.Name}\t");
+                    Console.WriteLine($"Sınıf Öğretmeni:{item.Teacher}\t");
+
                 }
             }
             ShowClassOptions();
         }
+
     }
 }

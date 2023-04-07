@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SchoolControlSystem.Validations
 {
-    public static class CommonValidations
+    public  class CommonValidations
     {
-        public static bool IsExistOnList(string EnteredValue,List<string> SearchList) 
+        public  bool IsExistOnList<T>(T EnteredValue,List<T> SearchList) 
         {
             if (SearchList.Contains(EnteredValue))
             {
@@ -19,7 +19,7 @@ namespace SchoolControlSystem.Validations
                 return false;
             }
         }
-        public static int GetGenerateNewId(List<int> Idlist) 
+        public  int GetGenerateNewId(List<int> Idlist) 
         {
             if (Idlist.Count==0)
             {
@@ -30,16 +30,17 @@ namespace SchoolControlSystem.Validations
                 return Idlist.Max() + 1;
             }
         }
-        public static bool  IsListEmpty(List<int> IdList) 
+        public bool IsListEmpty(List<int> Idlist)
         {
-            if (IdList.Count==0)
+            if (Idlist.Count == 0)
             {
+                Console.WriteLine("Listede kayıt yoktur.");
                 return true;
             }
             else
             {
                 return false;
             }
-        } 
+        }
     }
 }

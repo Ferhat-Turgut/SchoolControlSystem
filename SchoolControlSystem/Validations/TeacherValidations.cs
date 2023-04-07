@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchoolControlSystem.Validations
 {
-    public class ClassValidations:CommonValidations
+    public class TeacherValidations:CommonValidations
     {
-        
     }
 }
