@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchoolControlSystem
 {
+    //Herhangi bir class'tan, nesne üretmeden listelere ulaşmak için static class olarak tanımladık.
     public static class Lists
     {
         public static List<ClassModel> ClassList= new List<ClassModel>();

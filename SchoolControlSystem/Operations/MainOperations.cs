@@ -15,6 +15,7 @@ namespace SchoolControlSystem.Operations
             string SelectedAction=Console.ReadLine();
             SelectedValueValidCheck(SelectedAction);
         }
+        //Girilen değerin geçerli olup olmadığını , CommonConstant içindeki geçerli main seçenekleri listesinden kontrol ediyoruz..
         public void SelectedValueValidCheck(string SelectedAction) 
         {
             bool IsSelectedValueExistOnList = CommonConstant.MainOperationsValidList.Contains(SelectedAction);

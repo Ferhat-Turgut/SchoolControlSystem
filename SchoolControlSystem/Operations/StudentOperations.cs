@@ -16,7 +16,8 @@ namespace SchoolControlSystem.Operations
             Console.WriteLine("Öğrenci eklemek için 1'e\n" +
                               "Öğrencileri listelemek için 2'ye\n " +
                               "Öğrenciyi sınıfa atamak için 3'e\n " +
-                              "Ana girişe dönmek için 4'e basınız");
+                              "Öğrenci ödevi göndermek için 4'e\n " +
+                              "Ana girişe dönmek için 5'e basınız");
 
             string SelectedStudentAction = Console.ReadLine();
             SelectedStudentActionValidityCheck(SelectedStudentAction);
@@ -49,6 +50,9 @@ namespace SchoolControlSystem.Operations
                     AddStudentToClass();
                     break;
                 case "4":
+                    SendHomeWork();
+                    break;
+                case "5":
                     MainOperations mainOperations = new MainOperations();
                     mainOperations.ShowMainOptions();
                     break;
@@ -119,6 +123,21 @@ namespace SchoolControlSystem.Operations
             {
                 Console.WriteLine("Öğrenci listesinde kayıt yoktur.");
             }
+            ShowStudentOptions();
+        }
+        public void SendHomeWork() 
+        {
+            Console.WriteLine("Lütfen ödev gönderecek öğrencinin numarasını giriniz:");
+            var StudentNumber = Console.ReadLine();
+
+            while (!studentValidations.IsInt(StudentNumber))
+            {
+                Console.WriteLine("Lütfen öğrenci numarasını sayısal değer giriniz:");
+                StudentNumber = Console.ReadLine();
+            }
+
+            var Student = Lists.StudenList.FirstOrDefault(s=>s.Number==int.Parse(StudentNumber));
+            Console.WriteLine($"{Student.Number} numaralı {Student.Name} {Student.Surname} adlı öğrencinin ödevi gönderildi.");
             ShowStudentOptions();
         }
         public void AddStudentToClass()

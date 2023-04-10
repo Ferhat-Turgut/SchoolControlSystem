@@ -16,6 +16,8 @@ namespace SchoolControlSystem.Operations
             SelectedClassActionValidityCheck(SelectedClassAction);
 
         }
+        //Girilen değerin geçerli olup olmadığını , CommonConstant içindeki geçerli class seçenekleri listesinden kontrol ediyoruz..
+
         public void SelectedClassActionValidityCheck(string SelectedAction)
         {
             bool IsSelectedValueExistOnList = classValidations.IsExistOnList(SelectedAction, CommonConstant.ClassOperationsValidList);
