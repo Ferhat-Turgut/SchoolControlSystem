@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace SchoolControlSystem.Operations
 {
-    public class StudentOperations
+    public class StudentOperations : CommonOperations
     {
-        StudentValidations studentValidations=new StudentValidations();
+        StudentValidations studentValidations = new StudentValidations();
         public void ShowStudentOptions()
         {
             Console.WriteLine("Öğrenci eklemek için 1'e\n" +
@@ -21,10 +21,10 @@ namespace SchoolControlSystem.Operations
             string SelectedStudentAction = Console.ReadLine();
             SelectedStudentActionValidityCheck(SelectedStudentAction);
         }
-        public void SelectedStudentActionValidityCheck(string SelectedStudentAction) 
+        public void SelectedStudentActionValidityCheck(string SelectedStudentAction)
         {
-            bool IsSelectedValueExistOnList= studentValidations.IsExistOnList(SelectedStudentAction, CommonConstant.CommonConstant.StudentOperationsValidList);
-           
+            bool IsSelectedValueExistOnList = studentValidations.IsExistOnList(SelectedStudentAction, CommonConstant.StudentOperationsValidList);
+
             if (IsSelectedValueExistOnList)
             {
                 RedirectToSelectedStudentAction(SelectedStudentAction);
@@ -35,13 +35,13 @@ namespace SchoolControlSystem.Operations
                 ShowStudentOptions();
             }
         }
-        public void RedirectToSelectedStudentAction(string SelectedStudentAction) 
+        public void RedirectToSelectedStudentAction(string SelectedStudentAction)
         {
             switch (SelectedStudentAction)
             {
                 case "1":
                     AddStudent();
-                    break; 
+                    break;
                 case "2":
                     ShowStudentList();
                     break;
@@ -54,39 +54,42 @@ namespace SchoolControlSystem.Operations
                     break;
             }
         }
-        public void AddStudent() 
+        public void AddStudent()
         {
             Console.WriteLine("Lütfen öğrenci adı giriniz:");
-            string EnteredStudentName = Console.ReadLine().ToUpper();
+            string EnteredStudentName = Console.ReadLine().ToLower();
             Console.WriteLine("Lütfen öğrenci soyadı giriniz:");
-            string EnteredStudentSurname = Console.ReadLine().ToUpper();
+            string EnteredStudentSurname = Console.ReadLine().ToLower();
             Console.WriteLine("Lütfen öğrenci numarası giriniz:");
-            int EnteredStudentNumber =Convert.ToInt32( Console.ReadLine());
+            var EnteredStudentNumber = Console.ReadLine();
 
-            //Burayı methoda al
-            if (Lists.StudenList.Any(s=>s.Number==EnteredStudentNumber))
+            while (!studentValidations.IsInt(EnteredStudentNumber))
+            {
+                Console.WriteLine("Lütfen öğrenci numarasını sayısal değer giriniz:");
+                EnteredStudentNumber = Console.ReadLine();
+
+            }
+            if (Lists.StudenList.Any(s => s.Number == int.Parse(EnteredStudentNumber)))
             {
                 Console.WriteLine("Bu öğrenci numarası sistemde kayıtlıdır.");
                 ShowStudentOptions();
             }
             else
             {
-                int GeneratedNewStudentId = studentValidations.GetGenerateNewId(Lists.StudenList.Select(c => c.Id).ToList());
                 StudentModel studentModel = new StudentModel();
-                studentModel.Id = GeneratedNewStudentId;
+                studentModel.Id = GetGenerateNewId(Lists.StudenList.Select(c => c.Id).ToList());
                 studentModel.Name = EnteredStudentName;
                 studentModel.Surname = EnteredStudentSurname;
-                studentModel.Number = EnteredStudentNumber;
-
+                studentModel.Number = int.Parse(EnteredStudentNumber);
                 Lists.StudenList.Add(studentModel);
+
                 Console.WriteLine("Yeni öğrenci eklendi.");
                 ShowStudentOptions();
             }
         }
         public void ShowStudentList()
         {
-            bool IsStudentListEmpty = studentValidations.IsListEmpty(Lists.StudenList.Select(s => s.Id).ToList());
-            if (!IsStudentListEmpty)
+            if (Lists.StudenList.Count != 0)
             {
                 foreach (var item in Lists.StudenList)
                 {
@@ -94,46 +97,68 @@ namespace SchoolControlSystem.Operations
                     Console.Write($"Öğrenci Adı:{item.Name}\t");
                     Console.Write($"Öğrenci Soyadı:{item.Surname}\t");
                     Console.Write($"Öğrenci Numarası:{item.Number}\t");
-                    if (string.IsNullOrEmpty(item.Class))
+                    if (item.ClassId == null)
                     {
-                        Console.WriteLine($"Öğrenci Sınıfı:Atanmadı.\t");
+                        Console.WriteLine("Öğrenci Sınıfı:Atanmadı.\t");
                     }
                     else
                     {
-                        Console.WriteLine($"Öğrenci Sınıfı:{item.Class}\t");
+                        var ClassName = Lists.ClassList.Where(c => c.Id == item.ClassId).Select(c => c.Name).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(ClassName))
+                        {
+                            Console.WriteLine($"Öğrenci Sınıfı:{ClassName}\t");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Öğrenci Sınıfı:Kayıt yok.\t");
+                        }
                     }
-                }
-            }
-            
-            ShowStudentOptions();
-        }
-        public void AddStudentToClass() 
-        {
-            Console.WriteLine("Lütfen eklenecek sınıfın adını giriniz:");
-            string ClassToAdd=Console.ReadLine().ToUpper(); 
-            Console.WriteLine("Lütfen eklenecek öğrencinin numarasını giriniz:");
-            int StudentNumberToAdd = Convert.ToInt32(Console.ReadLine());
-
-            var EnteredStudentsClass = Lists.StudenList.FirstOrDefault(s => s.Number == StudentNumberToAdd && s.Class != null);
-            if (EnteredStudentsClass == null)
-            {
-                bool IsEnteredClassNameExistOnClassList = studentValidations.IsExistOnList(ClassToAdd, Lists.ClassList.Select(c => c.Name).ToList());
-                bool IsEnteredStudentNumberExistOnClassList = studentValidations.IsExistOnList(StudentNumberToAdd, Lists.StudenList.Select(s => s.Number).ToList());
-
-                if (IsEnteredClassNameExistOnClassList && IsEnteredStudentNumberExistOnClassList)
-                {
-                    StudentModel student = Lists.StudenList.FirstOrDefault(s=>s.Number==StudentNumberToAdd);
-                    student.Class = ClassToAdd;
-                    Console.WriteLine("Öğrenci sınıfa kaydedildi.");
-                }
-                else
-                {
-                    Console.WriteLine("Girilen sınıf veya öğrenci numarası sistemde kayıtlı değildir.");
                 }
             }
             else
             {
-                Console.WriteLine("Bu öğrencinin bir sınıfı vardır.");
+                Console.WriteLine("Öğrenci listesinde kayıt yoktur.");
+            }
+            ShowStudentOptions();
+        }
+        public void AddStudentToClass()
+        {
+            Console.WriteLine("Lütfen eklenecek sınıfın adını giriniz:");
+            string ClassToAdd = Console.ReadLine().ToLower();
+            Console.WriteLine("Lütfen eklenecek öğrencinin numarasını giriniz:");
+            var StudentNumberToAdd = Console.ReadLine();
+
+            while (!studentValidations.IsInt(StudentNumberToAdd))
+            {
+                Console.WriteLine("Lütfen öğrenci numarasını sayısal değer giriniz:");
+                StudentNumberToAdd = Console.ReadLine();
+            }
+
+            bool IsEnteredClassNameExistOnClassList = Lists.ClassList.Any(c => c.Name == ClassToAdd);
+            bool IsEnteredStudentNumberExistOnClassList = Lists.StudenList.Any(s => s.Number == int.Parse(StudentNumberToAdd));
+
+            var StudentsClassInfo = Lists.StudenList.FirstOrDefault(s => s.Number == int.Parse(StudentNumberToAdd) && s.ClassId != null);
+
+            if (!IsEnteredClassNameExistOnClassList)
+            {
+                Console.WriteLine("Sınıf bilgisi kayıtlarda mevcut değildir.");
+            }
+            if (!IsEnteredStudentNumberExistOnClassList)
+            {
+                Console.WriteLine("Öğrenci bilgisi kayıtlarda mevcut değildir.");
+            }
+            if (StudentsClassInfo != null)
+            {
+                Console.WriteLine("Bu öğrencinin sınıf kaydı mevcuttur.");
+            }
+
+            if (StudentsClassInfo == null && IsEnteredClassNameExistOnClassList && IsEnteredStudentNumberExistOnClassList)
+            {
+                StudentModel student = Lists.StudenList.FirstOrDefault(s => s.Number == int.Parse(StudentNumberToAdd));
+                var IdOfAddedClass = Lists.ClassList.Where(c => c.Name == ClassToAdd).Select(c => c.Id).FirstOrDefault();
+                student.ClassId = IdOfAddedClass;
+
+                Console.WriteLine("Öğrenci sınıfa kaydedildi.");
             }
 
             ShowStudentOptions();

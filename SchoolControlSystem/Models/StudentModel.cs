@@ -12,6 +12,7 @@ namespace SchoolControlSystem.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public int Number { get; set;}
-        public string? Class { get; set; }
+        public int? ClassId { get; set; }
+        
     }
 }

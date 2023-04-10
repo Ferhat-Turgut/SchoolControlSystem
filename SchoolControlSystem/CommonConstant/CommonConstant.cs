@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SchoolControlSystem.CommonConstant
-{
+
     public static class CommonConstant
     {
         public static List<string> MainOperationsValidList= new List<string> {"1","2","3","4","5"};
@@ -14,4 +13,4 @@ namespace SchoolControlSystem.CommonConstant
         public static List<string> TeacherOperationsValidList = new List<string> { "1", "2", "3","4"};
 
     }
-}
+

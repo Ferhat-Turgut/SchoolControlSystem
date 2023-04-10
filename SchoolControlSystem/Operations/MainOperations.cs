@@ -1,10 +1,4 @@
 ﻿using SchoolControlSystem.Validations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SchoolControlSystem.Operations
 {
@@ -14,25 +8,25 @@ namespace SchoolControlSystem.Operations
         public  void ShowMainOptions() 
         {
             Console.WriteLine("Sınıf işlemleri için 1'e\n" +
-                              "Öğrenci işlemleri için 2'ye\n " +
-                              "Öğretmen işlemleri için 3'e\n " +
-                              "Arama işlemleri için 4'e\n " +
+                              "Öğrenci işlemleri için 2'ye\n" +
+                              "Öğretmen işlemleri için 3'e\n" +
+                              "Arama işlemleri için 4'e\n" +
                               "Çıkış için 5'e basınız.");
             string SelectedAction=Console.ReadLine();
             SelectedValueValidCheck(SelectedAction);
         }
         public void SelectedValueValidCheck(string SelectedAction) 
         {
-            bool IsSelectedValueExistOnList = mainValidations.IsExistOnList(SelectedAction, CommonConstant.CommonConstant.MainOperationsValidList); 
-            if (IsSelectedValueExistOnList) 
-            {
-                RedirectToSelectedAction(SelectedAction);
-            }
-            else
+            bool IsSelectedValueExistOnList = CommonConstant.MainOperationsValidList.Contains(SelectedAction);
+    
+            while (!IsSelectedValueExistOnList)
             {
                 Console.WriteLine("Lütfen geçerli bir seçenek giriniz!");
-                ShowMainOptions();
+                SelectedAction = Console.ReadLine();
+                IsSelectedValueExistOnList= CommonConstant.MainOperationsValidList.Contains(SelectedAction);
             }
+            RedirectToSelectedAction(SelectedAction);
+
         }
         public void RedirectToSelectedAction(string SelectedAction) 
         {

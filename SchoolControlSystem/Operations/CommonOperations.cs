@@ -10,14 +10,17 @@ namespace SchoolControlSystem.Operations
 {
     public  class CommonOperations
     {
-        public void GetList(List<object> getList)
+        public  int GetGenerateNewId(List<int> Idlist)
         {
-            foreach (var item in getList)
+            if (Idlist.Count == 0)
             {
-                Console.WriteLine(item);
+                return 1;
+            }
+            else
+            {
+                return Idlist.Max() + 1;
             }
         }
-       
-        
+
     }
 }

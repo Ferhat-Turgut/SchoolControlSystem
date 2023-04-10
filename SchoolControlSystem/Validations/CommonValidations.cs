@@ -19,22 +19,10 @@ namespace SchoolControlSystem.Validations
                 return false;
             }
         }
-        public  int GetGenerateNewId(List<int> Idlist) 
+        public bool IsInt(string EnteredValue) 
         {
-            if (Idlist.Count==0)
+            if (int.TryParse(EnteredValue, out int result))
             {
-                return 1;
-            }
-            else
-            {
-                return Idlist.Max() + 1;
-            }
-        }
-        public bool IsListEmpty(List<int> Idlist)
-        {
-            if (Idlist.Count == 0)
-            {
-                Console.WriteLine("Listede kayıt yoktur.");
                 return true;
             }
             else
